@@ -50,6 +50,9 @@ PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/audio,$(TARGET_COPY_OUT_VENDOR)/etc)
 
 # Camera
+PRODUCT_PACKAGES += \
+    android.hardware.camera.provider@2.4-service.odin
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/camera/camera_config.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/camera/camera_config.xml
 
