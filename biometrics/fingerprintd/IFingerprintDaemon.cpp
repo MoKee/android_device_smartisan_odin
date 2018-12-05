@@ -187,7 +187,7 @@ class BpFingerprintDaemon : public BpInterface<IFingerprintDaemon> {
                 BpInterface<IFingerprintDaemon>(impl) {
         }
 
-        virtual void init(fingerprint_notify_t notify) {
+        virtual void init(fingerprint_notify_t __unused notify) {
             ALOGE("init()");
             return;
         }
