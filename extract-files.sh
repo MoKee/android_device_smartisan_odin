@@ -32,3 +32,10 @@ BLOB_ROOT="$MK_ROOT"/vendor/"$VENDOR"/"$DEVICE"/proprietary
 # Camera
 sed -i 's|/system/etc/|/vendor/etc/|g' $BLOB_ROOT/vendor/lib/hw/camera.msm8953.so
 sed -i 's|/system/etc/|/vendor/etc/|g' $BLOB_ROOT/vendor/lib/libmmcamera2_sensor_modules.so
+
+# Fingerprint - Goodix
+sed -i 's|gxfingerprint\x00|fingerprint\x00\x00\x00|g' $BLOB_ROOT/vendor/lib64/hw/fingerprint.goodix.so
+sed -i 's|gxfingerprint\x00|fingerprint\x00\x00\x00|g' $BLOB_ROOT/vendor/lib64/libfpservice.so
+
+# Fingerprint - Idex
+sed -i 's|idex_fingerprint\x00|fingerprint\x00\x00\x00\x00\x00\x00|g' $BLOB_ROOT/vendor/lib64/hw/fingerprint.idex.so
