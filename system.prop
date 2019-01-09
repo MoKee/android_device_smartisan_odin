@@ -3,6 +3,10 @@ media.stagefright.audio.sink=280
 ro.vendor.audio.sdk.fluencetype=fluence
 vendor.audio.offload.multiple.enabled=true
 
+# Camera
+media.stagefright.legacyencoder=true
+media.stagefright.less-secure=true
+
 # NFC
 ro.nfc.port=I2C
 ro.hardware.nfc_nci=nqx.default

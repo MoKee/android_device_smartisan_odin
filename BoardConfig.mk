@@ -36,6 +36,7 @@ BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_PATH)/bluetooth
 
 # Camera
+TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 TARGET_LD_SHIM_LIBS += /system/vendor/lib/hw/camera.msm8953.so|/system/vendor/lib/libshim_camera.so
 TARGET_LD_SHIM_LIBS += /system/vendor/lib/libmmcamera_ppeiscore.so|/system/vendor/lib/libshim_camera.so
 
