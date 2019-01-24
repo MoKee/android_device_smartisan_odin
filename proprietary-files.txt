@@ -23,19 +23,19 @@ etc/acdbdata/QRD/QRD_Speaker_cal.acdb:vendor/etc/acdbdata/QRD/QRD_Speaker_cal.ac
 
 # Camera
 bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
-lib/hw/camera.msm8953.so:vendor/lib/hw/camera.msm8953.so
-lib/libalColorMono.so:vendor/lib/libalColorMono.so
-lib/libalRnB.so:vendor/lib/libalRnB.so
-lib/libalSDE2.so:vendor/lib/libalSDE2.so
-lib/libarcsoft_beautyshot.so:vendor/lib/libarcsoft_beautyshot.so
-lib/libarcsoft_low_light_shot.so:vendor/lib/libarcsoft_low_light_shot.so
-lib/libarcsoft_smart_denoise.so:vendor/lib/libarcsoft_smart_denoise.so
-lib/libmm-qcamera.so:vendor/lib/libmm-qcamera.so
-lib/libmmcamera_interface.so:vendor/lib/libmmcamera_interface.so
-lib/libmmjpeg_interface.so:vendor/lib/libmmjpeg_interface.so
-lib/libmpbase.so:vendor/lib/libmpbase.so
-lib/libqomx_core.so:vendor/lib/libqomx_core.so
-lib/libtt_panorama.so:vendor/lib/libtt_panorama.so
+lib/hw/camera.msm8953.so
+lib/libalColorMono.so
+lib/libalRnB.so
+lib/libalSDE2.so
+lib/libarcsoft_beautyshot.so
+lib/libarcsoft_low_light_shot.so
+lib/libarcsoft_smart_denoise.so
+lib/libmm-qcamera.so
+lib/libmmcamera_interface.so
+lib/libmmjpeg_interface.so
+lib/libmpbase.so
+lib/libqomx_core.so
+lib/libtt_panorama.so
 vendor/lib/libAltek_AF.so
 vendor/lib/libChamomilePA.so
 vendor/lib/libHAFIAFalSDE1.so
@@ -477,19 +477,19 @@ vendor/lib/libchromatix_s5k3p3st_snapshot.so
 vendor/lib/libchromatix_s5k3p3st_snapshot_scale.so
 
 # Camera configs
-etc/camera/csidtg_camera.xml:vendor/etc/camera/csidtg_camera.xml
-etc/camera/csidtg_chromatix.xml:vendor/etc/camera/csidtg_chromatix.xml
-etc/camera/imx258_chromatix.xml:vendor/etc/camera/imx258_chromatix.xml
-etc/camera/imx258_mono_chromatix.xml:vendor/etc/camera/imx258_mono_chromatix.xml
-etc/camera/ov13855_f13v08b_chromatix.xml:vendor/etc/camera/ov13855_f13v08b_chromatix.xml
-etc/camera/ov13855_mono_sunny_chromatix.xml:vendor/etc/camera/ov13855_mono_sunny_chromatix.xml
-etc/camera/ov13855_sunny_chromatix.xml:vendor/etc/camera/ov13855_sunny_chromatix.xml
-etc/camera/ov8856_chromatix.xml:vendor/etc/camera/ov8856_chromatix.xml
-etc/camera/ov8856_qtech_chromatix.xml:vendor/etc/camera/ov8856_qtech_chromatix.xml
-etc/camera/s5k3l8_chromatix.xml:vendor/etc/camera/s5k3l8_chromatix.xml
-etc/camera/s5k3l8_mono_chromatix.xml:vendor/etc/camera/s5k3l8_mono_chromatix.xml
-etc/camera/s5k3p3st_chromatix.xml:vendor/etc/camera/s5k3p3st_chromatix.xml
-etc/camera/s5k3p3st_qtech_chromatix.xml:vendor/etc/camera/s5k3p3st_qtech_chromatix.xml
+etc/camera/csidtg_camera.xml
+etc/camera/csidtg_chromatix.xml
+etc/camera/imx258_chromatix.xml
+etc/camera/imx258_mono_chromatix.xml
+etc/camera/ov13855_f13v08b_chromatix.xml
+etc/camera/ov13855_mono_sunny_chromatix.xml
+etc/camera/ov13855_sunny_chromatix.xml
+etc/camera/ov8856_chromatix.xml
+etc/camera/ov8856_qtech_chromatix.xml
+etc/camera/s5k3l8_chromatix.xml
+etc/camera/s5k3l8_mono_chromatix.xml
+etc/camera/s5k3p3st_chromatix.xml
+etc/camera/s5k3p3st_qtech_chromatix.xml
 
 # Camera firmware
 etc/firmware/cpp_firmware_v1_1_1.fw
