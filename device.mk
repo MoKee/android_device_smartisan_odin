@@ -51,7 +51,7 @@ PRODUCT_COPY_FILES += \
 
 # Camera
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/camera/camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/camera_config.xml
+    $(LOCAL_PATH)/camera/camera_config.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/camera/camera_config.xml
 
 PRODUCT_PACKAGES += \
     libshim_camera
