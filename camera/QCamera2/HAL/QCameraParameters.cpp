@@ -5310,6 +5310,74 @@ int32_t QCameraParameters::commitParameters()
     return commitSetBatch();
 }
 
+#define INSPECT_D(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %d\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field);
+
+#define INSPECT_U(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %u\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field);
+
+#define INSPECT_LLD(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %lld\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field);
+
+#define INSPECT_LLU(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %llu\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field);
+
+#define INSPECT_HEX(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %08llx\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field);
+
+#define INSPECT_F(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %f\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field);
+
+#define INSPECT_S(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: \"%s\"\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field);
+
+#define INSPECT_FPS_RANGE(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %f - %f, video %f - %f\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field.min_fps, table_ptr->field.max_fps, \
+        table_ptr->field.video_min_fps, table_ptr->field.video_max_fps);
+
+#define INSPECT_DIMEN(table_ptr, field) \
+    fprintf(inspect, "[%d|%u] %s: %d x %d\n", \
+        ((char *) &table_ptr->field) - ((char *) table_ptr), \
+        sizeof(table_ptr->field), #field, \
+        table_ptr->field.width, table_ptr->field.height);
+
+#define INSPECT_ARRAY(INSPECTOR, table_ptr, field, MAX) \
+    for (size_t i = 0; i < MAX; i++) \
+        INSPECTOR(table_ptr, field[i]);
+
+#define INSPECT_ARRAY_CNT(INSPECTOR, table_ptr, field, field_cnt, MAX) \
+    fprintf(inspect, "[%d|%u] %s: %zu (%s: %zu)\n", \
+        ((char *) &table_ptr->field_cnt) - ((char *) table_ptr), \
+        sizeof(table_ptr->field_cnt), #field_cnt, \
+        table_ptr->field_cnt, #MAX, MAX); \
+    if (table_ptr->field_cnt > MAX) { fprintf(inspect, "^^^ FIXME ^^^\n"); } \
+    else { for (size_t i = 0; i < table_ptr->field_cnt; i++) \
+        INSPECTOR(table_ptr, field[i]); }
+
 /*===========================================================================
  * FUNCTION   : initDefaultParameters
  *
@@ -5329,6 +5397,154 @@ int32_t QCameraParameters::initDefaultParameters()
     }
     int32_t hal_version = CAM_HAL_V1;
     ADD_SET_PARAM_ENTRY_TO_BATCH(m_pParamBuf, CAM_INTF_PARM_HAL_VERSION, hal_version);
+
+    cam_capability_t *cap = m_pCapability;
+
+    size_t cap_size = 29792;
+
+    const char *cap_filename = "/data/misc/camera//capability_%d_%s";
+    char cap_file_dump[255];
+    char cap_file_inspect[255];
+
+    sprintf(cap_file_dump, cap_filename, cap->position, "dump");
+    sprintf(cap_file_inspect, cap_filename, cap->position, "inspect");
+
+    FILE *dump = fopen(cap_file_dump, "wb");
+    fwrite(cap, cap_size, 1, dump);
+    fclose(dump);
+
+    FILE *inspect = fopen(cap_file_inspect, "wb");
+    fprintf(inspect, "sizeof(cam_capability_t) BLOB: %u, OSS: %u\n", cap_size, sizeof(cam_capability_t));
+    fprintf(inspect, "CAM_INTF_PARM_MAX BLOB: 240, OSS: %d\n", CAM_INTF_PARM_MAX);
+    fprintf(inspect, "----------\n");
+
+    INSPECT_D(cap, version);
+    INSPECT_D(cap, position);
+    INSPECT_D(cap, auto_hdr_supported);
+    INSPECT_D(cap, isWnrSupported);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_iso_modes, supported_iso_modes_cnt, CAM_ISO_MODE_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_flash_modes, supported_flash_modes_cnt, CAM_FLASH_MODE_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, zoom_ratio_tbl, zoom_ratio_tbl_cnt, MAX_ZOOMS_CNT);
+
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_effects, supported_effects_cnt, CAM_EFFECT_MODE_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_scene_modes, supported_scene_modes_cnt, CAM_SCENE_MODE_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_aec_modes, supported_aec_modes_cnt, CAM_AEC_MODE_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_FPS_RANGE, cap, fps_ranges_tbl, fps_ranges_tbl_cnt, MAX_SIZES_CNT);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_antibandings, supported_antibandings_cnt, CAM_ANTIBANDING_MODE_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_white_balances, supported_white_balances_cnt, CAM_WB_MODE_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_sensor_hdr_types, supported_sensor_hdr_types_cnt, CAM_SENSOR_HDR_MAX);
+    INSPECT_D(cap, min_wb_cct);
+    INSPECT_D(cap, max_wb_cct);
+    INSPECT_F(cap, min_wb_gain);
+    INSPECT_F(cap, max_wb_gain);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_focus_modes, supported_focus_modes_cnt, CAM_FOCUS_MODE_MAX);
+    INSPECT_ARRAY(INSPECT_F, cap, min_focus_pos, CAM_MANUAL_FOCUS_MODE_MAX);
+    INSPECT_ARRAY(INSPECT_F, cap, max_focus_pos, CAM_MANUAL_FOCUS_MODE_MAX);
+    INSPECT_D(cap, exposure_compensation_min);
+    INSPECT_D(cap, exposure_compensation_max);
+    INSPECT_D(cap, exposure_compensation_default);
+    INSPECT_F(cap, exposure_compensation_step);
+    INSPECT_D(cap, exp_compensation_step.numerator);
+    INSPECT_D(cap, exp_compensation_step.denominator);
+    INSPECT_D(cap, video_stablization_supported);
+    INSPECT_ARRAY_CNT(INSPECT_DIMEN, cap, picture_sizes_tbl, picture_sizes_tbl_cnt, MAX_SIZES_CNT);
+    INSPECT_D(cap, modes_supported);
+    INSPECT_D(cap, sensor_mount_angle);
+    INSPECT_F(cap, focal_length);
+    INSPECT_F(cap, hor_view_angle);
+    INSPECT_F(cap, ver_view_angle);
+    INSPECT_ARRAY_CNT(INSPECT_DIMEN, cap, preview_sizes_tbl, preview_sizes_tbl_cnt, MAX_SIZES_CNT);
+    INSPECT_ARRAY_CNT(INSPECT_DIMEN, cap, video_sizes_tbl, video_sizes_tbl_cnt, MAX_SIZES_CNT);
+    INSPECT_ARRAY_CNT(INSPECT_DIMEN, cap, livesnapshot_sizes_tbl, livesnapshot_sizes_tbl_cnt, MAX_SIZES_CNT);
+    INSPECT_ARRAY_CNT(INSPECT_DIMEN, cap, vhdr_livesnapshot_sizes_tbl, vhdr_livesnapshot_sizes_tbl_cnt, MAX_SIZES_CNT);
+    INSPECT_ARRAY_CNT(INSPECT_DIMEN, cap, zzhdr_sizes_tbl, zzhdr_sizes_tbl_cnt, MAX_SIZES_CNT);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_preview_fmts, supported_preview_fmt_cnt, CAM_FORMAT_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_picture_fmts, supported_picture_fmt_cnt, CAM_FORMAT_MAX);
+    INSPECT_D(cap, max_downscale_factor);
+    INSPECT_ARRAY_CNT(INSPECT_DIMEN, cap, raw_dim, supported_raw_dim_cnt, MAX_SIZES_CNT);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_raw_fmts, supported_raw_fmt_cnt, CAM_FORMAT_MAX);
+    INSPECT_D(cap, auto_wb_lock_supported);
+    INSPECT_D(cap, zoom_supported);
+    INSPECT_D(cap, smooth_zoom_supported);
+    INSPECT_D(cap, auto_exposure_lock_supported);
+    INSPECT_D(cap, video_snapshot_supported);
+    INSPECT_D(cap, max_num_roi);
+    INSPECT_D(cap, max_num_focus_areas);
+    INSPECT_D(cap, max_num_metering_areas);
+    INSPECT_D(cap, max_zoom_step);
+    INSPECT_D(cap, brightness_ctrl.min_value);
+    INSPECT_D(cap, brightness_ctrl.max_value);
+    INSPECT_D(cap, brightness_ctrl.def_value);
+    INSPECT_D(cap, brightness_ctrl.step);
+    INSPECT_D(cap, sharpness_ctrl.min_value);
+    INSPECT_D(cap, sharpness_ctrl.max_value);
+    INSPECT_D(cap, sharpness_ctrl.def_value);
+    INSPECT_D(cap, sharpness_ctrl.step);
+    INSPECT_D(cap, contrast_ctrl.min_value);
+    INSPECT_D(cap, contrast_ctrl.max_value);
+    INSPECT_D(cap, contrast_ctrl.def_value);
+    INSPECT_D(cap, contrast_ctrl.step);
+    INSPECT_D(cap, saturation_ctrl.min_value);
+    INSPECT_D(cap, saturation_ctrl.max_value);
+    INSPECT_D(cap, saturation_ctrl.def_value);
+    INSPECT_D(cap, saturation_ctrl.step);
+    INSPECT_D(cap, sce_ctrl.min_value);
+    INSPECT_D(cap, sce_ctrl.max_value);
+    INSPECT_D(cap, sce_ctrl.def_value);
+    INSPECT_D(cap, sce_ctrl.step);
+    INSPECT_U(cap, hdr_bracketing_setting.num_frames);
+    INSPECT_U(cap, hdr_bracketing_setting.exp_val.mode);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, hdr_bracketing_setting.exp_val.values, hdr_bracketing_setting.num_frames, MAX_EXP_BRACKETING_LENGTH);
+    INSPECT_HEX(cap, qcom_supported_feature_mask);
+    INSPECT_D(cap, padding_info.width_padding);
+    INSPECT_D(cap, padding_info.height_padding);
+    INSPECT_D(cap, padding_info.plane_padding);
+    INSPECT_D(cap, padding_info.min_stride);
+    INSPECT_D(cap, padding_info.min_scanline);
+    INSPECT_D(cap, padding_info.offset_info.offset_x);
+    INSPECT_D(cap, padding_info.offset_info.offset_y);
+    INSPECT_D(cap, min_num_pp_bufs);
+    INSPECT_D(cap, rdi_mode_stream_fmt);
+    INSPECT_F(cap, min_focus_distance);
+    INSPECT_F(cap, hyper_focal_distance);
+    INSPECT_ARRAY_CNT(INSPECT_F, cap, focal_lengths, focal_lengths_count, CAM_FOCAL_LENGTHS_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_F, cap, apertures, apertures_count, CAM_APERTURES_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_F, cap, filter_densities, filter_densities_count, CAM_FILTER_DENSITIES_MAX);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, optical_stab_modes, optical_stab_modes_count, CAM_OPT_STAB_MAX);
+    INSPECT_DIMEN(cap, lens_shading_map_size);
+    INSPECT_DIMEN(cap, geo_correction_map_size);
+    INSPECT_D(cap, focus_dist_calibrated);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_test_pattern_modes, supported_test_pattern_modes_cnt, MAX_TEST_PATTERN_CNT);
+    INSPECT_D(cap, reference_illuminant1);
+    INSPECT_D(cap, reference_illuminant2);
+    INSPECT_ARRAY(INSPECT_LLD, cap, jpeg_stall_durations, MAX_SIZES_CNT);
+    INSPECT_ARRAY(INSPECT_LLD, cap, raw16_stall_durations, MAX_SIZES_CNT);
+
+
+    INSPECT_D(cap, isCacSupported);
+    INSPECT_D(cap, opaque_raw_fmt);
+    INSPECT_U(cap, true_portrait_settings_need.meta_max_size);
+
+
+    INSPECT_D(cap, sensor_type.sens_type);
+    INSPECT_D(cap, sensor_type.native_format);
+
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, aberration_modes, aberration_modes_count, CAM_COLOR_CORRECTION_ABERRATION_MAX);
+
+    INSPECT_D(cap, max_batch_bufs_supported);
+    INSPECT_D(cap, buf_alignment);
+    INSPECT_D(cap, min_stride);
+    INSPECT_D(cap, min_scanline);
+    INSPECT_S(cap, flash_dev_name);
+    INSPECT_S(cap, eeprom_version_info);
+    INSPECT_LLU(cap, max_pixel_bandwidth);
+    INSPECT_D(cap, optical_black_region_count);
+    INSPECT_D(cap, hotPixel_mode);
+    INSPECT_D(cap, hotPixel_count);
+    INSPECT_ARRAY_CNT(INSPECT_D, cap, supported_instant_aec_modes, supported_instant_aec_modes_cnt, CAM_AEC_CONVERGENCE_MAX);
+
+    fprintf(inspect, "----------\n");
+    fclose(inspect);
 
     /*************************Initialize Values******************************/
     // Set read only parameters from camera capability
