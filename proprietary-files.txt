@@ -151,9 +151,9 @@ vendor/lib/libmmcamera2_mct_shimlayer.so
 vendor/lib/libmmcamera2_pp_buf_mgr.so
 vendor/lib/libmmcamera2_pproc_modules.so
 vendor/lib/libmmcamera2_q3a_core.so
-vendor/lib/libmmcamera2_sensor_modules.so
+vendor/lib/libmmcamera2_sensor_modules.so|5789ae6a21ed42549ef4365d7af0e86fa41e9d20
 vendor/lib/libmmcamera2_stats_algorithm.so
-vendor/lib/libmmcamera2_stats_modules.so
+vendor/lib/libmmcamera2_stats_modules.so|771373c9b7bb80ba8f3a916cf7cd542ccd6522a1
 vendor/lib/libmmjpeg.so
 vendor/lib/libmmqjpeg_codec.so
 vendor/lib/libmmqjpegdma.so
@@ -171,16 +171,16 @@ vendor/lib/libubifocus.so
 # Camera actuators
 vendor/lib/libactuator_ad5816g.so
 vendor/lib/libactuator_ak7345.so
-vendor/lib/libactuator_ak7371.so
+vendor/lib/libactuator_ak7371.so|69adc6893d1ce55cf902928ed72851455f06f1f6
 vendor/lib/libactuator_ak7371_mono.so
 vendor/lib/libactuator_bu64244gwz.so
 vendor/lib/libactuator_bu64297.so
 vendor/lib/libactuator_dw9761b.so
-vendor/lib/libactuator_dw9763.so
+vendor/lib/libactuator_dw9763.so|0a4948b649725cb246cfe9887bcb506a73e460af
 vendor/lib/libactuator_lc898122.so
 vendor/lib/libactuator_lc898212xd.so
 vendor/lib/libactuator_lc898212xd_qc2002.so
-vendor/lib/libactuator_lc898217xc.so
+vendor/lib/libactuator_lc898217xc.so|cfd017eb4fbd13441bdd36fb342aa88617a53a44
 vendor/lib/libactuator_lc898217xc_dvt.so
 vendor/lib/libactuator_lc898217xc_dvt_mono.so
 vendor/lib/libactuator_lc898217xc_mono.so
