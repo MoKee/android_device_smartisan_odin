@@ -6193,6 +6193,12 @@ int32_t QCameraParameters::initDefaultParameters()
     pic_dim.width = 0;
     pic_dim.height = 0;
 
+    m_pCapability->picture_sizes_tbl_cnt = m_pCapability->preview_sizes_tbl_cnt;
+    for (uint32_t i = 0; i < m_pCapability->preview_sizes_tbl_cnt; i++) {
+        m_pCapability->picture_sizes_tbl[i].width = m_pCapability->preview_sizes_tbl[i].width;
+        m_pCapability->picture_sizes_tbl[i].height = m_pCapability->preview_sizes_tbl[i].height;
+    }
+
     for(uint32_t i = 0;
             i < (m_pCapability->picture_sizes_tbl_cnt - 1);
             i++) {
