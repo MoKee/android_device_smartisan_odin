@@ -6387,6 +6387,7 @@ int QCamera3HardwareInterface::initCapabilities(uint32_t cameraId)
     int rc = 0;
     mm_camera_vtbl_t *cameraHandle = NULL;
     QCamera3HeapMemory *capabilityHeap = NULL;
+    size_t i, j = 0;
 
     rc = camera_open((uint8_t)cameraId, &cameraHandle);
     if (rc) {
@@ -6435,6 +6436,15 @@ int QCamera3HardwareInterface::initCapabilities(uint32_t cameraId)
     }
     memcpy(gCamCapability[cameraId], DATA_PTR(capabilityHeap,0),
                                         sizeof(cam_capability_t));
+
+    for (i = 0; i < gCamCapability[cameraId]->preview_sizes_tbl_cnt; i++) {
+        if (gCamCapability[cameraId]->preview_sizes_tbl[i].width <= 1280) {
+            gCamCapability[cameraId]->preview_sizes_tbl[j] =
+                    gCamCapability[cameraId]->preview_sizes_tbl[i];
+            j++;
+        }
+    }
+    gCamCapability[cameraId]->preview_sizes_tbl_cnt = j;
 
     int index;
     for (index = 0; index < CAM_ANALYSIS_INFO_MAX; index++) {

@@ -2317,6 +2317,7 @@ int QCamera2HardwareInterface::initCapabilities(uint32_t cameraId,
     ATRACE_CALL();
     int rc = NO_ERROR;
     QCameraHeapMemory *capabilityHeap = NULL;
+    size_t i, j = 0;
 
     /* Allocate memory for capability buffer */
     capabilityHeap = new QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
@@ -2361,6 +2362,15 @@ int QCamera2HardwareInterface::initCapabilities(uint32_t cameraId,
     }
     memcpy(gCamCapability[cameraId], DATA_PTR(capabilityHeap,0),
                                         sizeof(cam_capability_t));
+
+    for (i = 0; i < gCamCapability[cameraId]->preview_sizes_tbl_cnt; i++) {
+        if (gCamCapability[cameraId]->preview_sizes_tbl[i].width <= 1280) {
+            gCamCapability[cameraId]->preview_sizes_tbl[j] =
+                    gCamCapability[cameraId]->preview_sizes_tbl[i];
+            j++;
+        }
+    }
+    gCamCapability[cameraId]->preview_sizes_tbl_cnt = j;
 
     int index;
     for (index = 0; index < CAM_ANALYSIS_INFO_MAX; index++) {
