@@ -26,6 +26,9 @@
 
 DEVICE_PATH := device/smartisan/odin
 
+# Build
+PRODUCT_SOONG_NAMESPACES += $(DEVICE_PATH)
+
 # Kernel
 TARGET_KERNEL_CONFIG := mokee_odin_defconfig
 
