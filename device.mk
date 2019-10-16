@@ -87,10 +87,10 @@ PRODUCT_PACKAGES += \
     com.android.nfc_extras \
     com.gsma.services.nfc \
     com.nxp.nfc.nq \
-    libnqnfc-nci \
     nfc_nci.nqx.default.hw \
-    libnqp61-jcop-kit \
-    NQNfcNci \
+    libnfc-nci \
+    libp61-jcop-kit \
+    NfcNci \
     nqnfcee_access.xml \
     nqnfcse_access.xml \
     Tag
