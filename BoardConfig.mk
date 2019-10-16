@@ -49,9 +49,6 @@ TARGET_RECOVERY_DEVICE_MODULES := libinit_odin
 # MK Hardware
 BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/mkhw
 
-# NFC
-TARGET_USES_NQ_NFC := true
-
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 
